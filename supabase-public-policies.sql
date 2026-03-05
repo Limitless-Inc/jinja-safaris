@@ -36,12 +36,12 @@ USING (is_active = true);
 -- Testimonials: Public can view approved testimonials
 CREATE POLICY "Public can view approved testimonials" ON testimonials 
 FOR SELECT TO public 
-USING (status = 'approved');
+USING (is_approved = true);
 
 -- Blog: Public can view published blog posts
 CREATE POLICY "Public can view published blogs" ON blog_posts 
 FOR SELECT TO public 
-USING (status = 'published');
+USING (published = true);
 
 -- Contact Info: Public can view contact information
 CREATE POLICY "Public can view contact info" ON contact_info 
