@@ -19,30 +19,33 @@ export default function ActivityCard({ activity, currency = 'USD' }: ActivityCar
     : `UGX ${price.toLocaleString()}`;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-      <div className="relative h-64">
+    <div className="safari-card group">
+      <div className="relative h-72 overflow-hidden">
         <Image
           src={activity.image_url || '/images/placeholder.jpg'}
           alt={activity.name}
           fill
-          className="object-cover"
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 p-6">
+          <h3 className="text-2xl font-bold text-white mb-2">{activity.name}</h3>
+          <p className="text-white/90 text-sm">{activity.short_description}</p>
+        </div>
       </div>
       <div className="p-6">
-        <h3 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">{activity.name}</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">{activity.short_description}</p>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <p className="text-sm text-gray-500">Starting from</p>
-            <p className="text-2xl font-bold text-primary">{priceDisplay}</p>
+            <p className="text-sm text-safari-brown/70 dark:text-safari-sand/70">Starting from</p>
+            <p className="text-3xl font-bold bg-gradient-to-r from-safari-orange to-safari-sand bg-clip-text text-transparent">{priceDisplay}</p>
           </div>
-          <Link
-            href={`/booking?activity=${activity.id}`}
-            className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full transition"
-          >
-            Book Now
-          </Link>
         </div>
+        <Link
+          href={`/booking?activity=${activity.id}`}
+          className="safari-btn w-full text-center block"
+        >
+          Book Now
+        </Link>
       </div>
     </div>
   );

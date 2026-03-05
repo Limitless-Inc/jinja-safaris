@@ -17,34 +17,37 @@ export default async function HotelsPage() {
   const hotels = await getHotels();
 
   return (
-    <div className="py-16 px-4">
+    <div className="py-24 px-4 safari-pattern">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4">Partner Hotels</h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
+        <div className="text-center mb-16 animate-fade-in">
+          <h1 className="safari-heading mb-6">Partner Hotels</h1>
+          <p className="text-2xl text-safari-brown dark:text-safari-sand">
             Comfortable stays for your Jinja adventure
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {hotels.map((hotel) => (
-            <div key={hotel.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-              <div className="relative h-64">
+            <div key={hotel.id} className="safari-card group">
+              <div className="relative h-72 overflow-hidden">
                 <Image
                   src={hotel.image_url || '/images/placeholder.jpg'}
                   alt={hotel.name}
                   fill
-                  className="object-cover"
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h3 className="text-2xl font-bold text-white mb-2">{hotel.name}</h3>
+                </div>
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold mb-3">{hotel.name}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">{hotel.description}</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">{hotel.description}</p>
                 <a
                   href={`https://wa.me/256123456789?text=I'm interested in ${hotel.name}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-primary hover:bg-secondary text-white px-6 py-2 rounded-full transition"
+                  className="safari-btn w-full text-center block"
                 >
                   Inquire Now
                 </a>
