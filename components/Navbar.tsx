@@ -16,9 +16,9 @@ export default function Navbar() {
             <Image
               src="/images/logo.png"
               alt="Jinja Safaris Logo"
-              width={60}
-              height={60}
-              className="h-14 w-auto group-hover:scale-110 transition-transform duration-300"
+              width={80}
+              height={80}
+              className="h-16 w-auto group-hover:scale-110 transition-transform duration-300"
             />
             <div className="hidden sm:block">
               <span className="text-2xl font-bold bg-gradient-to-r from-safari-brown to-safari-orange bg-clip-text text-transparent">Jinja Safaris</span>
