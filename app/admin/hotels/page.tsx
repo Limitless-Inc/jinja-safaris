@@ -12,6 +12,7 @@ export default function AdminHotelsPage() {
   const [formData, setFormData] = useState<Partial<Hotel>>({});
   const [newHotel, setNewHotel] = useState({ name: '', description: '', image_url: '' });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [editFile, setEditFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -83,9 +84,37 @@ export default function AdminHotelsPage() {
 
   const handleSave = async () => {
     if (!editing) return;
-    await supabase.from('hotels').update(formData).eq('id', editing);
+    
+    setUploading(true);
+    let imageUrl = formData.image_url;
+
+    if (editFile) {
+      const fileExt = editFile.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `hotels/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('hotels')
+        .upload(filePath, editFile);
+
+      if (uploadError) {
+        alert('Error uploading file: ' + uploadError.message);
+        setUploading(false);
+        return;
+      }
+
+      const { data } = supabase.storage
+        .from('hotels')
+        .getPublicUrl(filePath);
+
+      imageUrl = data.publicUrl;
+    }
+
+    await supabase.from('hotels').update({ ...formData, image_url: imageUrl }).eq('id', editing);
     setEditing(null);
+    setEditFile(null);
     fetchHotels();
+    setUploading(false);
   };
 
   const toggleActive = async (id: string, isActive: boolean) => {
@@ -165,8 +194,18 @@ export default function AdminHotelsPage() {
                     className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700"
                     rows={3}
                   />
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Upload New Image (optional)</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setEditFile(e.target.files?.[0] || null)}
+                      className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700"
+                    />
+                  </div>
                   <input
                     type="text"
+                    placeholder="Or enter Image URL"
                     value={formData.image_url || ''}
                     onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                     className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700"
@@ -174,12 +213,13 @@ export default function AdminHotelsPage() {
                   <div className="flex gap-4">
                     <button
                       onClick={handleSave}
-                      className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition"
+                      disabled={uploading}
+                      className="bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white px-6 py-2 rounded-lg transition"
                     >
-                      Save
+                      {uploading ? 'Saving...' : 'Save'}
                     </button>
                     <button
-                      onClick={() => setEditing(null)}
+                      onClick={() => { setEditing(null); setEditFile(null); }}
                       className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition"
                     >
                       Cancel
